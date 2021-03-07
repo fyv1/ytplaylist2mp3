@@ -7,11 +7,10 @@ import java.io.IOException;
 
 public class YtDownloaderApplication {
     public static void main(String[] args) throws IOException {
-        String youtubeUrl = "https://www.youtube.com/watch?v=1TXF5xa3Vmk";
-//        String youtubeUrl = "https://www.youtube.com/watch?v=p7Q0kpqgl9E";
-        System.out.println("start");
-        File mp3 = Downloader.youtubeToMP3(youtubeUrl, "C:\\Users\\Grzesiek\\Desktop\\ytdownloader\\");
-        System.out.println("end");
+        String youtubeUrl = "https://www.youtube.com/watch?v=N3cP0nr9JxQ";
+
+        File mp3 = Downloader.youtubeToMP3(youtubeUrl, "C:\\Users\\fyv\\Desktop\\yt2mp3\\");
+
         System.out.println(mp3.getName() + " downloaded");
     }
 }

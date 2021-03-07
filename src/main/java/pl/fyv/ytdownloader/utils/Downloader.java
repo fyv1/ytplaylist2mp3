@@ -11,6 +11,7 @@ public class Downloader {
     private static final Pattern VID_ID_PATTERN = Pattern.compile("(?<=v\\=|youtu\\.be\\/)\\w+");
     private static final Pattern MP3_URL_PATTERN = Pattern.compile("https\\:\\/\\/\\w+\\.ytapivmp3\\.com\\/download.+?(?=\\\")");
     private static final Pattern FILENAME_PATTERN = Pattern.compile("(?<=filename=\").+?(?=\")");
+
     public static File youtubeToMP3(String youtubeUrl, String path) throws IOException {
         String id = getID(youtubeUrl);
         String converter = loadConverter(id);
@@ -19,11 +20,16 @@ public class Downloader {
         StringBuilder builder = new StringBuilder();
         byte[] mp3 = load(mp3url, builder);
 
+        if(builder.toString().contains("\\")) replaceAll(builder, Pattern.compile("\\\\"), "_");
+        if(builder.toString().contains("/")) replaceAll(builder, Pattern.compile("/"), "_");
+        System.out.println(builder+" saving on disk");
+
         File output = new File(path+builder.toString());
         FileOutputStream stream = new FileOutputStream(output);
         stream.write(mp3);
         stream.flush();
         stream.close();
+        System.out.println(builder+" saved correctly");
 
         return output;
     }
@@ -48,7 +54,6 @@ public class Downloader {
                 }
             }
         }
-        System.out.println("xd "+filename);
 
         InputStream is = connection.getInputStream();
         byte[] byteChunk = new byte[2500];
@@ -66,9 +71,7 @@ public class Downloader {
 
     private static String toUTF8(String s) {
         try {
-            String s1 = new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8.name());
-            System.out.println(s+", "+s1);
-            return s1;
+            return new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
@@ -76,7 +79,7 @@ public class Downloader {
     }
 
     private static String loadConverter(String id) throws IOException {
-        String url = "https://www.320youtube.com/v14/watch?v=" + id;
+        String url = "https://www.320youtube.com/v14/watch?v=" + id; //downloading api
         byte[] bytes = load(url, null);
         return new String(bytes);
     }
@@ -95,5 +98,14 @@ public class Downloader {
             return m.group();
 
         throw new IllegalArgumentException("Invalid converter");
+    }
+
+    private static void replaceAll(StringBuilder sb, Pattern pattern, String replacement) {
+        Matcher m = pattern.matcher(sb);
+        int start = 0;
+        while (m.find(start)) {
+            sb.replace(m.start(), m.end(), replacement);
+            start = m.start() + replacement.length();
+        }
     }
 }
