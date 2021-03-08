@@ -12,11 +12,8 @@ public class Downloader {
     private static final Pattern MP3_URL_PATTERN = Pattern.compile("https\\:\\/\\/\\w+\\.ytapivmp3\\.com\\/download.+?(?=\\\")");
     private static final Pattern FILENAME_PATTERN = Pattern.compile("(?<=filename=\").+?(?=\")");
 
-    public static File youtubeToMP3(String youtubeUrl, String path) throws IOException {
-        String id = getID(youtubeUrl);
+    public static File youtubeToMP3(String id, String path) throws IOException {
         String converter = loadConverter(id);
-        // the " - " in yt id is not recognized and the address to fetch is like eg. <meta property="og:image" content="https://img.youtube.com/vi/3tUh/hqdefault.jpg"> for 3tUh-x-fp8Q id...
-        System.out.println(converter);
         String mp3url = getMP3URL(converter);
 
         StringBuilder builder = new StringBuilder();
@@ -96,11 +93,9 @@ public class Downloader {
 
     private static String getMP3URL(String converter) {
         Matcher m = MP3_URL_PATTERN.matcher(converter);
-        if (m.find()) {
-            System.out.println(m.group());
+        if (m.find())
             return m.group();
-        }
-        System.out.println(m.toString());
+
         throw new IllegalArgumentException("Invalid converter");
     }
 

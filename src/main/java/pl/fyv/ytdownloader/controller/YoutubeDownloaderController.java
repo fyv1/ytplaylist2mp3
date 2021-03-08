@@ -27,6 +27,6 @@ public class YoutubeDownloaderController {
     //todo downloading
     @GetMapping("/video/{id}")
     public ResponseEntity<File> downloadFile(@PathVariable("id") String id) {
-        return new ResponseEntity<>(service.downloadMp("https://www.youtube.com/watch?v="+id, "C:\\Users\\fyv\\Desktop\\yt2mp3\\"), HttpStatus.OK);
+        return new ResponseEntity<>(service.downloadMp(id, "C:\\Users\\fyv\\Desktop\\yt2mp3\\"), HttpStatus.OK);
     }
 }
