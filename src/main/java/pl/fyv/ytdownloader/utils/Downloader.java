@@ -15,6 +15,8 @@ public class Downloader {
     public static File youtubeToMP3(String youtubeUrl, String path) throws IOException {
         String id = getID(youtubeUrl);
         String converter = loadConverter(id);
+        // the " - " in yt id is not recognized and the address to fetch is like eg. <meta property="og:image" content="https://img.youtube.com/vi/3tUh/hqdefault.jpg"> for 3tUh-x-fp8Q id...
+        System.out.println(converter);
         String mp3url = getMP3URL(converter);
 
         StringBuilder builder = new StringBuilder();
@@ -94,9 +96,11 @@ public class Downloader {
 
     private static String getMP3URL(String converter) {
         Matcher m = MP3_URL_PATTERN.matcher(converter);
-        if (m.find())
+        if (m.find()) {
+            System.out.println(m.group());
             return m.group();
-
+        }
+        System.out.println(m.toString());
         throw new IllegalArgumentException("Invalid converter");
     }
 
