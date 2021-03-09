@@ -6,6 +6,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pl.fyv.ytdownloader.domain.DownloadItemDTO;
@@ -21,6 +23,7 @@ public class YtFetcher {
     private String DEVELOPER_KEY;
     @Value("${ytdl.application.name}")
     private String APPLICATION_NAME;
+    final Logger logger = LoggerFactory.getLogger(YtFetcher.class);
 
     public ArrayList<DownloadItemDTO> getPlaylist(String playlistId) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         ArrayList<DownloadItemDTO> list = new ArrayList<>();
@@ -38,7 +41,7 @@ public class YtFetcher {
                     .execute();
 
             for (var playlistItem : playlistItemsListResponse.getItems()) {
-                System.out.println("Currently proccessing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());
+                logger.info("Currently proccessing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());
                 DownloadItemDTO dto = new DownloadItemDTO();
                 dto.setTitle(playlistItem.getSnippet().getTitle());
                 dto.setVideoId(playlistItem.getSnippet().getResourceId().getVideoId());

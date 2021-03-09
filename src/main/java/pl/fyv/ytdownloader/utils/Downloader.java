@@ -1,5 +1,8 @@
 package pl.fyv.ytdownloader.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -12,6 +15,8 @@ public class Downloader {
     private static final Pattern MP3_URL_PATTERN = Pattern.compile("https\\:\\/\\/\\w+\\.ytapivmp3\\.com\\/download.+?(?=\\\")");
     private static final Pattern FILENAME_PATTERN = Pattern.compile("(?<=filename=\").+?(?=\")");
 
+    final static Logger logger = LoggerFactory.getLogger(Downloader.class);
+
     public static File youtubeToMP3(String id, String path) throws IOException {
         String converter = loadConverter(id);
         String mp3url = getMP3URL(converter);
@@ -21,14 +26,13 @@ public class Downloader {
 
         if(builder.toString().contains("\\")) replaceAll(builder, Pattern.compile("\\\\"), "_");
         if(builder.toString().contains("/")) replaceAll(builder, Pattern.compile("/"), "_");
-        System.out.println(builder+" saving on disk");
 
         File output = new File(path+builder.toString());
         FileOutputStream stream = new FileOutputStream(output);
         stream.write(mp3);
         stream.flush();
         stream.close();
-        System.out.println(builder+" saved correctly");
+        logger.info(builder+" saved correctly");
 
         return output;
     }
@@ -57,6 +61,8 @@ public class Downloader {
         InputStream is = connection.getInputStream();
         byte[] byteChunk = new byte[2500];
         int n;
+        if(filename != null)
+            logger.info(filename+" saving to buffor");
 
         while ((n = is.read(byteChunk)) > 0) {
             baos.write(byteChunk, 0, n);
