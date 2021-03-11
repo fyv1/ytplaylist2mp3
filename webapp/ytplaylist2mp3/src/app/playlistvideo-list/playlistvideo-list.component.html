@@ -1,0 +1,22 @@
+<h3>Youtube Playlist Items to Download as MP3</h3>
+<div className="container">
+    <table className="table">
+        <thead>
+            <tr>
+                <th>Thumbnail</th>
+                <th>Title</th>
+                <th>Download</th>
+                <th>Listen on YT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of playlistItems | async">
+                <td><img src={{item.thumbnailUrl}} width="120px" height="90px" /></td>
+                <td>{{item.title}}</td>
+                <td><a href='http://localhost:8082/api/video/{{item.videoId}}'>Download</a></td>
+                <td><a href='https://youtu.be/watch?v={{item.videoId}}'>Listen on YT</a></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
