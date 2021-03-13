@@ -1,0 +1,6 @@
+.cursor-loader { 
+    cursor: wait;
+}
+.cursor-loader * {
+    cursor: wait !important;
+}

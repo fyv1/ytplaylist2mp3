@@ -9,10 +9,15 @@ export class InnerService {
   constructor() { }
 
   savePlaylistUrl(playlist: YoutubePlaylist) {
-    localStorage.setItem("playlistUrl", playlist.playlistUrl);
+    localStorage.setItem("playlistUrl", playlist.playlistUrl)
   }
   
   getPlaylistUrl() {
-    return localStorage.getItem("playlistUrl");
+    return localStorage.getItem("playlistUrl")
   }
+
+  clearPlaylistUrl() {
+    localStorage.removeItem("playlistUrl")
+  }
+
 }

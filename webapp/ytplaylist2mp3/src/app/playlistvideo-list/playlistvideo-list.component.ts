@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ClientApiService } from './../service/client-api.service';
-import { Router } from '@angular/router';
-import { InnerService } from '../service/inner.service';
-import { PlaylistItem } from '../domain/PlaylistItem';
+import { Component, OnInit, Renderer2 } from '@angular/core'
+import { Observable } from 'rxjs'
+import { ClientApiService } from './../service/client-api.service'
+import { Router } from '@angular/router'
+import { InnerService } from '../service/inner.service'
+import { PlaylistItem } from '../domain/PlaylistItem'
+import { InvalidUrlException } from './../exceptions/InvalidUrlException'
 
 @Component({
   selector: 'app-playlistvideo-list',
@@ -12,28 +13,38 @@ import { PlaylistItem } from '../domain/PlaylistItem';
 })
 export class PlaylistvideoListComponent implements OnInit {
 
-  ytPlaylistUrl: string = this.innerService.getPlaylistUrl();
+  ytPlaylistUrl: string = this.innerService.getPlaylistUrl()
   playlistItems: Observable<PlaylistItem[]>
+  loading = false
 
   constructor(private service: ClientApiService,
     private router: Router,
-    private innerService: InnerService) {
-      if(this.ytPlaylistUrl) {
-        this.getPlaylistItems();
-      } else {
-        this.router.navigateByUrl('/');
-      }
-     }
+    private innerService: InnerService) { 
+    }
 
   ngOnInit(): void {
+    this.getPlaylistItems()
   }
 
   getPlaylistItems() {
       try {
-        this.playlistItems = this.service.getPlaylistItems(this.ytPlaylistUrl);
+        this.loading = true
+        this.service.getPlaylistItems(this.ytPlaylistUrl)
+          .subscribe(items=> {
+            this.playlistItems = items
+            this.loading = false
+            this.innerService.clearPlaylistUrl()
+          })
       } catch (error) {
-        // todo send info that playlist url is incorrect
-        this.router.navigateByUrl('/');
+        if(error instanceof InvalidUrlException) 
+            alert("Invalid URL pattern! Paste correct Playlist url from Youtube")
+        
+        if(error instanceof TypeError)
+          alert("An error occured! Try again.")
+        
+        
+        console.error(error)
+        this.router.navigateByUrl('/')
       } 
   }
 
