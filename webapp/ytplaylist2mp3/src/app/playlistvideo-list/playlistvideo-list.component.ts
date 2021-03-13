@@ -5,6 +5,7 @@ import { Router } from '@angular/router'
 import { InnerService } from '../service/inner.service'
 import { PlaylistItem } from '../domain/PlaylistItem'
 import { InvalidUrlException } from './../exceptions/InvalidUrlException'
+import { PlaylistNotFoundException } from './../exceptions/PlaylistNotFoundException'
 
 @Component({
   selector: 'app-playlistvideo-list',
@@ -37,8 +38,9 @@ export class PlaylistvideoListComponent implements OnInit {
           })
       } catch (error) {
         if(error instanceof InvalidUrlException) 
-            alert("Invalid URL pattern! Paste correct Playlist url from Youtube")
-        
+          alert("Invalid URL pattern! Paste correct Playlist url from Youtube")
+        if(error instanceof PlaylistNotFoundException) 
+          alert("Playlist not found or private")
         if(error instanceof TypeError)
           alert("An error occured! Try again.")
         
