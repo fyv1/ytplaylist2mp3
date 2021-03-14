@@ -5,13 +5,14 @@ import { Observable, throwError } from 'rxjs'
 import { tap, catchError } from 'rxjs/operators'
 import { InvalidUrlException } from './../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../exceptions/PlaylistNotFoundException'
+import { Constants } from '../Constants'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientApiService {
 
-  url = "http://localhost:8082/"
+  url = Constants.SERVER_URL
 
   constructor(private http: HttpClient, private router: Router) { }
 
