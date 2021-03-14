@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.fyv.ytdownloader.domain.DownloadItemDTO;
-import pl.fyv.ytdownloader.utils.Downloader;
-import pl.fyv.ytdownloader.utils.YtFetcher;
+import pl.fyv.ytdownloader.util.Downloader;
+import pl.fyv.ytdownloader.util.YtFetcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,8 @@ public class YtDownloaderService {
 
     @Autowired
     YtFetcher fetcher;
+    @Autowired
+    Downloader downloader;
 
     final static Logger logger = LoggerFactory.getLogger(Downloader.class);
 
@@ -40,10 +42,10 @@ public class YtDownloaderService {
 
     }
 
-    public File downloadMp(String ytUrl, String pathToSave) {
+    public File downloadMp(String ytUrl) {
         File output = null;
         try {
-            output = Downloader.youtubeToMP3(ytUrl, pathToSave);
+            output = downloader.youtubeToMP3(ytUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }

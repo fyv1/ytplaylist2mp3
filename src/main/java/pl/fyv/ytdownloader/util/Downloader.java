@@ -1,7 +1,9 @@
-package pl.fyv.ytdownloader.utils;
+package pl.fyv.ytdownloader.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -10,34 +12,40 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class Downloader {
     private static final Pattern VID_ID_PATTERN = Pattern.compile("(?<=v\\=|youtu\\.be\\/)\\w+");
     private static final Pattern MP3_URL_PATTERN = Pattern.compile("https\\:\\/\\/\\w+\\.ytapivmp3\\.com\\/download.+?(?=\\\")");
     private static final Pattern FILENAME_PATTERN = Pattern.compile("(?<=filename=\").+?(?=\")");
 
+    @Value("${ytdl.download.path}")
+    private String path;
+    private String tempName="";
+
     final static Logger logger = LoggerFactory.getLogger(Downloader.class);
 
-    public static File youtubeToMP3(String id, String path) throws IOException {
+    public File youtubeToMP3(String id) throws IOException {
         String converter = loadConverter(id);
         String mp3url = getMP3URL(converter);
 
         StringBuilder builder = new StringBuilder();
         byte[] mp3 = load(mp3url, builder);
 
-        if(builder.toString().contains("\\")) replaceAll(builder, Pattern.compile("\\\\"), "_");
-        if(builder.toString().contains("/")) replaceAll(builder, Pattern.compile("/"), "_");
-
-        File output = new File(path+builder.toString());
+        if(tempName.contains("\\")) tempName=tempName.replaceAll("\\\\", "_");
+        if(tempName.contains("/")) tempName=tempName.replaceAll("/", "_");
+        if(tempName.contains(":")) tempName=tempName.replaceAll(":", "_");
+        File output = new File(path+tempName);
+        logger.info("File saved in: "+output.getAbsolutePath());
         FileOutputStream stream = new FileOutputStream(output);
         stream.write(mp3);
         stream.flush();
         stream.close();
-        logger.info(builder+" saved correctly");
+        logger.info(builder+".mp3 saved correctly");
 
         return output;
     }
 
-    private static byte[] load(String url, StringBuilder filename) throws IOException {
+    private byte[] load(String url, StringBuilder filename) throws IOException {
         URL url2 = new URL(url);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -56,14 +64,16 @@ public class Downloader {
                     filename.append(s);
                 }
             }
+            replaceAll(filename, Pattern.compile(".mp3"), "");
         }
 
         InputStream is = connection.getInputStream();
         byte[] byteChunk = new byte[2500];
         int n;
-        if(filename != null)
-            logger.info(filename+" saving to buffor");
-
+        if(filename != null) {
+            tempName = filename.toString() + "_" + new java.util.Date().getTime()+".mp3";
+            logger.info(filename + ".mp3 saving to buffer");
+        }
         while ((n = is.read(byteChunk)) > 0) {
             baos.write(byteChunk, 0, n);
         }
@@ -74,7 +84,7 @@ public class Downloader {
         return baos.toByteArray();
     }
 
-    private static String toUTF8(String s) {
+    private String toUTF8(String s) {
         try {
             return new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
@@ -83,13 +93,13 @@ public class Downloader {
         }
     }
 
-    private static String loadConverter(String id) throws IOException {
+    private String loadConverter(String id) throws IOException {
         String url = "https://www.320youtube.com/v14/watch?v=" + id; //downloading api
         byte[] bytes = load(url, null);
         return new String(bytes);
     }
 
-    private static String getID(String youtubeUrl) {
+    private String getID(String youtubeUrl) {
         Matcher m = VID_ID_PATTERN.matcher(youtubeUrl);
         if (!m.find()) {
             throw new IllegalArgumentException("Invalid YouTube URL.");
@@ -97,7 +107,7 @@ public class Downloader {
         return m.group();
     }
 
-    private static String getMP3URL(String converter) {
+    private String getMP3URL(String converter) {
         Matcher m = MP3_URL_PATTERN.matcher(converter);
         if (m.find())
             return m.group();
@@ -105,7 +115,7 @@ public class Downloader {
         throw new IllegalArgumentException("Invalid converter");
     }
 
-    private static void replaceAll(StringBuilder sb, Pattern pattern, String replacement) {
+    private void replaceAll(StringBuilder sb, Pattern pattern, String replacement) {
         Matcher m = pattern.matcher(sb);
         int start = 0;
         while (m.find(start)) {

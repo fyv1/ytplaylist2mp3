@@ -6,6 +6,7 @@ import { tap, catchError } from 'rxjs/operators'
 import { InvalidUrlException } from './../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../exceptions/PlaylistNotFoundException'
 import { Constants } from '../Constants'
+import { VideoNotFoundException } from '../exceptions/VideoNotFoundException'
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,21 @@ export class ClientApiService {
     } else {
       throw new InvalidUrlException("Invalid playlist URL")
     }
-  }  
+  } 
+  
+  downloadItem(videoId: string) : Observable<any> {
+    return this.http.get(`${this.url}/api/video/${videoId}`)
+        .pipe(
+          catchError(() => {
+            alert("Video not found")
+            this.router.navigateByUrl('/')
+            return throwError(new VideoNotFoundException("Video not found"))
+          }),
+
+          tap(item => {
+            console.log(`downloaded: ${item}`)
+          })
+        )
+  }
 
 }

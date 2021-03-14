@@ -1,0 +1,12 @@
+<h3>Youtube Playlist Items to Download as MP3</h3>
+<div className="container">
+    <div *ngIf="loading; else loadedBlock">
+        <div class="loader">Loading...</div>
+        <p>The server is currently processing your MP3 File.</p>
+        <p>Download will start shortly...</p>
+    </div>
+    <ng-template #loadedBlock>
+        <p>Downloaded!</p>
+        <a routerLink="/">Back to homepage</a>
+    </ng-template>
+</div>
