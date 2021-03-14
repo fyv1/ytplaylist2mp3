@@ -39,6 +39,7 @@ public class YtFetcher {
                     .setKey(DEVELOPER_KEY)
                     .setPlaylistId(playlistId)
                     .execute();
+            logger.info("Playlist "+playlistId+" in processing");
 
             for (var playlistItem : playlistItemsListResponse.getItems()) {
                 logger.info("Currently proccessing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());

@@ -1,6 +1,6 @@
 <h3>Youtube Playlist Items to Download as MP3</h3>
 <div className="container">
-    <div *ngIf="loading; else loadedBlock">Please wait until fetching is over...</div>
+    <div *ngIf="loading; else loadedBlock"><div class="loader">Loading...</div></div>
     <ng-template #loadedBlock>
         <table className="table">
             <thead>
