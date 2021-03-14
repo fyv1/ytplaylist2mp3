@@ -37,7 +37,7 @@ No login, no external tools, no ads, everything's free and open sourced!
 1. Run commands:
 ```
 mvn spring-boot:run
-cd ytplaylist2mp3
+cd webapp
 npm install
 ng serve
 ```
