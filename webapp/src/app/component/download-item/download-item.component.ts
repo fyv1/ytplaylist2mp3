@@ -14,6 +14,7 @@ export class DownloadItemComponent implements OnInit {
 
   videoId: string
   loading = false
+  filename: string
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -26,7 +27,7 @@ export class DownloadItemComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    
+    this.removeItemFromDisk()
   }
 
   downloadItemRequest() {
@@ -34,6 +35,7 @@ export class DownloadItemComponent implements OnInit {
       this.loading = true
       this.service.downloadItem(this.videoId)
         .subscribe(item => {
+          this.filename = item
           this.loading = false
         })
     } catch (error) {
@@ -45,6 +47,17 @@ export class DownloadItemComponent implements OnInit {
       console.error(error)
       this.router.navigateByUrl('/')
     }
+  }
+
+  removeItemFromDisk() {
+    let tempArr
+    if(this.filename.includes("/"))
+      tempArr = this.filename.split("/")
+    else if(this.filename.includes("\\")) 
+      tempArr = this.filename.split("\\")
+    
+    console.log(tempArr[tempArr.length-1])
+    this.service.removeFileFromServer(tempArr[tempArr.length-1])
   }
 
 }

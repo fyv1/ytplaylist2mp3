@@ -55,4 +55,9 @@ export class ClientApiService {
         )
   }
 
+  removeFileFromServer(filename: string) : void {
+    this.http.delete(`${this.url}/api/video/${filename}`)
+    .subscribe()
+  }
+
 }

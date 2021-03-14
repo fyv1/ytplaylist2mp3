@@ -29,8 +29,8 @@ public class YoutubeDownloaderController {
         return new ResponseEntity<>(service.downloadMp(id), HttpStatus.OK);
     }
 
-    @GetMapping("/video/{id}/delete")
-    public ResponseEntity<File> deleteFile(@PathVariable("id") String id) {
-        return new ResponseEntity<>(service.downloadMp(id), HttpStatus.OK);
+    @DeleteMapping("/video/{id}")
+    public void deleteFile(@PathVariable("id") String id) {
+        service.removeFile(id);
     }
 }

@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +24,8 @@ public class YtDownloaderService {
     YtFetcher fetcher;
     @Autowired
     Downloader downloader;
+    @Value("${ytdl.download.path}")
+    private String path;
 
     final static Logger logger = LoggerFactory.getLogger(Downloader.class);
 
@@ -50,5 +53,13 @@ public class YtDownloaderService {
             e.printStackTrace();
         }
         return output;
+    }
+
+    public void removeFile(String name) {
+        File obj = new File(path+name);
+        if (obj.delete())
+            logger.info("Deleted the file: " + obj.getName());
+        else
+            logger.info("Failed to delete the file.");
     }
 }
