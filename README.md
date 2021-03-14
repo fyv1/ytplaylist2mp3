@@ -32,6 +32,7 @@ No login, no external tools, no ads, everything's free and open sourced!
 ### Run application
 1. Change `application.properties.example` to `application.properties` in `resources`
 1. If necessary change `server.port`
+1. Add YouTube developer key and Google application name
 1. Change URL in `ytplaylist2mp3\src\app\Constants.ts`
 1. Run commands:
 ```
