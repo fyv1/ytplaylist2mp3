@@ -26,6 +26,7 @@ public class YoutubeDownloaderController {
         return new ResponseEntity<>(service.getPlaylistItems(id), HttpStatus.OK);
     }
 
+    // todo delete a file after some time after downloading OR download file directly to client
     @GetMapping(value = "/video/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable("id") String id) throws FileNotFoundException {
         var file = service.downloadMp(id);
