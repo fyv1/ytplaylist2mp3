@@ -23,31 +23,31 @@ export class DownloadItemComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.downloadItemRequest()
+    // this.downloadItemRequest()
   }
 
   ngOnDestroy(): void {
     this.removeItemFromDisk()
   }
 
-  downloadItemRequest() {
-    try {
-      this.loading = true
-      this.service.downloadItem(this.videoId)
-        .subscribe(item => {
-          this.filename = item
-          this.loading = false
-        })
-    } catch (error) {
-      if(error instanceof VideoNotFoundException)
-        alert("Video not found")
-      if(error instanceof TypeError)
-        alert("An error occured! Try again.")
+  // downloadItemRequest() {
+  //   try {
+  //     this.loading = true
+  //     this.service.downloadItem(this.videoId)
+  //       .subscribe(item => {
+  //         this.filename = item
+  //         this.loading = false
+  //       })
+  //   } catch (error) {
+  //     if(error instanceof VideoNotFoundException)
+  //       alert("Video not found")
+  //     if(error instanceof TypeError)
+  //       alert("An error occured! Try again.")
 
-      console.error(error)
-      this.router.navigateByUrl('/')
-    }
-  }
+  //     console.error(error)
+  //     this.router.navigateByUrl('/')
+  //   }
+  // }
 
   removeItemFromDisk() {
     let tempArr

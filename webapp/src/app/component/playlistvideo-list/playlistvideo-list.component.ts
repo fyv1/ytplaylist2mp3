@@ -7,6 +7,8 @@ import { PlaylistItem } from '../../domain/PlaylistItem'
 import { InvalidUrlException } from '../../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../../exceptions/PlaylistNotFoundException'
 import { DataService } from 'src/app/service/data.service'
+import { HttpResponse } from '@angular/common/http'
+import { VideoNotFoundException } from 'src/app/exceptions/VideoNotFoundException'
 
 @Component({
   selector: 'app-playlistvideo-list',
@@ -18,6 +20,9 @@ export class PlaylistvideoListComponent implements OnInit {
   ytPlaylistUrl: string = this.innerService.getPlaylistUrl()
   playlistItems: Observable<PlaylistItem[]>
   loading = false
+  downloading = false
+  filename: string
+  xhr = new XMLHttpRequest()
 
   constructor(private service: ClientApiService,
     private router: Router,
@@ -54,6 +59,51 @@ export class PlaylistvideoListComponent implements OnInit {
         console.error(error)
         this.router.navigateByUrl('/')
       }
+  }
+
+  downloadRequest(item) {
+    try {
+      let vidId = item.videoId
+      this.downloading = true
+      this.service.downloadItem(vidId)
+        .subscribe((resp: HttpResponse<Blob>)  => {
+          console.log(resp.headers.get('content-disposition'))
+          let data = resp.body
+          let filename = "download.mp3"
+          let contentDisposition = resp.headers.get('content-disposition')
+          if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+            let matches = filenameRegex.exec(contentDisposition)
+            if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '')
+          }
+          let a = document.createElement('a')
+          let objectUrl = URL.createObjectURL(data)
+          a.href = objectUrl
+          a.download = filename
+          a.click()
+          URL.revokeObjectURL(objectUrl)
+          this.downloading = false
+        })
+    } catch (error) {
+      if(error instanceof VideoNotFoundException)
+        alert("Video not found")
+      if(error instanceof TypeError)
+        alert("An error occured! Try again.")
+
+      console.error(error)
+      this.router.navigateByUrl('/')
+    }
+  }
+
+  removeItemFromDisk() {
+    let tempArr
+    if(this.filename.includes("/"))
+      tempArr = this.filename.split("/")
+    else if(this.filename.includes("\\")) 
+      tempArr = this.filename.split("\\")
+    
+    console.log(tempArr[tempArr.length-1])
+    this.service.removeFileFromServer(tempArr[tempArr.length-1])
   }
 
 }
