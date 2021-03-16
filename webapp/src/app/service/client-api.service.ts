@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core'
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http'
+import { HttpClient, HttpResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { Observable, throwError } from 'rxjs'
 import { tap, catchError } from 'rxjs/operators'
 import { InvalidUrlException } from './../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../exceptions/PlaylistNotFoundException'
 import { Constants } from '../Constants'
-import { VideoNotFoundException } from '../exceptions/VideoNotFoundException'
 
 @Injectable({
   providedIn: 'root'
@@ -39,23 +38,8 @@ export class ClientApiService {
       throw new InvalidUrlException("Invalid playlist URL")
     }
   } 
-  
-  // downloadItem(videoId: string) : Observable<any> {
-  //   return this.http.get(`${this.url}/api/video/${videoId}`)
-  //       .pipe(
-  //         catchError(() => {
-  //           alert("Video not found")
-  //           this.router.navigateByUrl('/')
-  //           return throwError(new VideoNotFoundException("Video not found"))
-  //         }),
 
-  //         tap(item => {
-  //           console.log(`downloaded: ${item}`)
-  //         })
-  //       )
-  // }
-
-  downloadItem(videoId: string) : Observable<HttpResponse<Blob>> {//: Observable<Blob> {
+  downloadItem(videoId: string) : Observable<HttpResponse<Blob>> {
     return this.http.get<Blob>(`${this.url}/api/video/${videoId}`, {
       responseType: 'blob' as 'json',
       observe: 'response',

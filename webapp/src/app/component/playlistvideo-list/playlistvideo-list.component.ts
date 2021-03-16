@@ -6,7 +6,6 @@ import { InnerService } from '../../service/inner.service'
 import { PlaylistItem } from '../../domain/PlaylistItem'
 import { InvalidUrlException } from '../../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../../exceptions/PlaylistNotFoundException'
-import { DataService } from 'src/app/service/data.service'
 import { HttpResponse, HttpEventType } from '@angular/common/http'
 import { VideoNotFoundException } from 'src/app/exceptions/VideoNotFoundException'
 

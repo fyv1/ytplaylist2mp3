@@ -1,6 +1,7 @@
 package pl.fyv.ytdownloader.service;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,13 @@ public class YtDownloaderService {
             logger.info("Deleted the file: " + obj.getName());
         else
             logger.info("Failed to delete the file.");
+    }
+
+    public void clearDir() {
+        var dir = new File(path);
+        for(File file: dir.listFiles())
+            if (!file.isDirectory())
+                file.delete();
+        logger.info("Dir path cleared!");
     }
 }
