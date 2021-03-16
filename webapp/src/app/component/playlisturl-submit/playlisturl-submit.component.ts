@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { YoutubePlaylist } from '../../domain/YoutubePlaylist';
-import { ClientApiService } from '../../service/client-api.service';
 import { Router } from '@angular/router';
 import { InnerService } from '../../service/inner.service';
 

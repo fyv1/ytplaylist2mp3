@@ -58,7 +58,8 @@ export class ClientApiService {
   downloadItem(videoId: string) : Observable<HttpResponse<Blob>> {//: Observable<Blob> {
     return this.http.get<Blob>(`${this.url}/api/video/${videoId}`, {
       responseType: 'blob' as 'json',
-      observe: 'response'
+      observe: 'response',
+      reportProgress: true
     })
   }
 

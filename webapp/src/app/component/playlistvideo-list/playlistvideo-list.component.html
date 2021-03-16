@@ -15,8 +15,7 @@
                 <tr *ngFor="let item of playlistItems ">
                     <td><img src={{item.thumbnailUrl}} width="120px" height="90px" /></td>
                     <td>{{item.title}}</td>
-                    <!-- <td><a target="_blank" routerLink='/download/{{item.videoId}}' routerLinkActive="active">Download</a></td> -->
-                    <td><a routerLink='' (click)="downloadRequest(item)">Download</a></td>
+                    <td><div *ngIf="downloading; else downloadBlock"><div >{{progress}}</div></div><ng-template #downloadBlock><a routerLink='#' (click)="downloadRequest(item)">Download</a></ng-template></td>
                     <td><a href='https://youtu.be/watch?v={{item.videoId}}'>Listen on YT</a></td>
                 </tr>
             </tbody>

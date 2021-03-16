@@ -7,14 +7,12 @@ import { PlaylisturlSubmitComponent } from './component/playlisturl-submit/playl
 import { PlaylistvideoListComponent } from './component/playlistvideo-list/playlistvideo-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { DownloadItemComponent } from './component/download-item/download-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlaylisturlSubmitComponent,
-    PlaylistvideoListComponent,
-    DownloadItemComponent
+    PlaylistvideoListComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 import { ClientApiService } from '../../service/client-api.service'
 import { Router } from '@angular/router'
@@ -7,7 +7,7 @@ import { PlaylistItem } from '../../domain/PlaylistItem'
 import { InvalidUrlException } from '../../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../../exceptions/PlaylistNotFoundException'
 import { DataService } from 'src/app/service/data.service'
-import { HttpResponse } from '@angular/common/http'
+import { HttpResponse, HttpEventType } from '@angular/common/http'
 import { VideoNotFoundException } from 'src/app/exceptions/VideoNotFoundException'
 
 @Component({
@@ -22,12 +22,11 @@ export class PlaylistvideoListComponent implements OnInit {
   loading = false
   downloading = false
   filename: string
-  xhr = new XMLHttpRequest()
+  progress: number = 0
 
   constructor(private service: ClientApiService,
     private router: Router,
-    private innerService: InnerService,
-    private dataService: DataService) {
+    private innerService: InnerService) {
     }
 
   ngOnInit(): void {
@@ -82,6 +81,7 @@ export class PlaylistvideoListComponent implements OnInit {
           a.download = filename
           a.click()
           URL.revokeObjectURL(objectUrl)
+        
           this.downloading = false
         })
     } catch (error) {
