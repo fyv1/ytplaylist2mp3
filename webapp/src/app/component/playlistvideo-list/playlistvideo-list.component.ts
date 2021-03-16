@@ -22,7 +22,6 @@ export class PlaylistvideoListComponent implements OnInit {
   loading = false
   downloading = false
   filename: string
-  progress: number = 0
 
   constructor(private service: ClientApiService,
     private router: Router,
@@ -66,7 +65,6 @@ export class PlaylistvideoListComponent implements OnInit {
       this.downloading = true
       this.service.downloadItem(vidId)
         .subscribe((resp: HttpResponse<Blob>)  => {
-          console.log(resp.headers.get('content-disposition'))
           let data = resp.body
           let filename = "download.mp3"
           let contentDisposition = resp.headers.get('content-disposition')
