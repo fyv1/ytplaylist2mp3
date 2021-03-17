@@ -1,6 +1,7 @@
 package pl.fyv.ytdownloader.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 public class YoutubeDownloaderController {
     @Autowired
     YtDownloaderService service;
+
+    @Value("${ytdl.using.internal.cron}")
+    boolean useInternalCron;
 
     @GetMapping("/playlist/{id}")
     public ResponseEntity<ArrayList<DownloadItemDTO>> getPlaylist(@PathVariable("id") String id) {
@@ -47,6 +51,7 @@ public class YoutubeDownloaderController {
     @Scheduled(cron = "0 0 4 * * *") // at 4am every day
     @DeleteMapping("/admin/directory")
     public void clearDir() {
-        service.clearDir();
+        if(useInternalCron)
+            service.clearDir();
     }
 }

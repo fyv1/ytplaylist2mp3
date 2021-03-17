@@ -1,3 +1,4 @@
 server.port=8082
 ytdl.developer.key=
 ytdl.application.name=
+ytdl.using.internal.cron=true
