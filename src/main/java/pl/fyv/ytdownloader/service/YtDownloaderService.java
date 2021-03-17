@@ -65,7 +65,7 @@ public class YtDownloaderService {
     }
 
     public void clearDir() {
-        var dir = new File(path);
+        File dir = new File(path);
         for(File file: dir.listFiles())
             if (!file.isDirectory())
                 file.delete();

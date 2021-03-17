@@ -1,7 +1,6 @@
 package pl.fyv.ytdownloader.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.fyv.ytdownloader.domain.DownloadItemDTO;
 import pl.fyv.ytdownloader.service.YtDownloaderService;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class YoutubeDownloaderController {
 
     @GetMapping(value = "/video/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable("id") String id) throws FileNotFoundException {
-        var file = service.downloadMp(id);
+        File file = service.downloadMp(id);
         InputStreamResource resource = new InputStreamResource((new FileInputStream(file)));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
@@ -44,7 +44,7 @@ public class YoutubeDownloaderController {
         service.removeFile(id);
     }
 
-    @Scheduled(cron = "0 4 * * *") // at 4am every day
+    @Scheduled(cron = "0 0 4 * * *") // at 4am every day
     @DeleteMapping("/admin/directory")
     public void clearDir() {
         service.clearDir();
