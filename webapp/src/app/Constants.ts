@@ -1,3 +1,3 @@
 export class Constants {
-    public static readonly SERVER_URL = "http://localhost:8082/"
+    public static readonly SERVER_URL = "http://yt2mp3.pl:10999"
 }
