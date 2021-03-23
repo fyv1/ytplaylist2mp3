@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { Observable } from 'rxjs'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ClientApiService } from '../../service/client-api.service'
 import { Router } from '@angular/router'
 import { InnerService } from '../../service/inner.service'
@@ -17,14 +17,15 @@ import { VideoNotFoundException } from 'src/app/exceptions/VideoNotFoundExceptio
 export class PlaylistvideoListComponent implements OnInit {
 
   ytPlaylistUrl: string = this.innerService.getPlaylistUrl()
-  playlistItems: Observable<PlaylistItem[]>
+  playlistItems: PlaylistItem[] //Observable<PlaylistItem[]>
   loading = false
   downloading = false
   filename: string
 
   constructor(private service: ClientApiService,
     private router: Router,
-    private innerService: InnerService) {
+    private innerService: InnerService,
+    private sanitizer: DomSanitizer) {
     }
 
   ngOnInit(): void {
@@ -44,6 +45,11 @@ export class PlaylistvideoListComponent implements OnInit {
             this.playlistItems = items
             this.loading = false
             this.innerService.clearPlaylistUrl()
+
+            this.playlistItems.forEach(function(it) {
+              it.currentState = 'readyToDownload'
+            })
+
           })
       } catch (error) {
         if(error instanceof InvalidUrlException)
@@ -61,7 +67,7 @@ export class PlaylistvideoListComponent implements OnInit {
   downloadRequest(item) {
     try {
       let vidId = item.videoId
-      this.downloading = true
+      item.currentState = 'downloading'
       this.service.downloadItem(vidId)
         .subscribe((resp: HttpResponse<Blob>)  => {
           let data = resp.body
@@ -78,8 +84,7 @@ export class PlaylistvideoListComponent implements OnInit {
           a.download = filename
           a.click()
           URL.revokeObjectURL(objectUrl)
-        
-          this.downloading = false
+          item.currentState = 'readyToDownload'
         })
     } catch (error) {
       if(error instanceof VideoNotFoundException)

@@ -1,4 +1,4 @@
-<h3>Youtube Playlist Items to Download as MP3</h3>
+<h5>Your playlist downloading is ready!</h5>
 <div className="container">
     <div *ngIf="loading; else loadedBlock"><div class="loader">Loading...</div></div>
     <ng-template #loadedBlock>
@@ -12,15 +12,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of playlistItems ">
+                <tr *ngFor="let item of playlistItems">
                     <td><img src={{item.thumbnailUrl}} width="120px" height="90px" /></td>
                     <td>{{item.title}}</td>
                     <td>
-                        <div *ngIf="downloading; else downloadBlock" class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            </div>
+                        <div *ngIf="item.currentState==='readyToDownload'">
+                            <div (click)="downloadRequest(item)"><a routerLink="../list">Download</a></div>
                         </div>
-                        <ng-template #downloadBlock><a routerLink='#' (click)="downloadRequest(item)">Download</a></ng-template>
+                        <div *ngIf="item.currentState==='downloading'">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><div style="visibility: hidden;">Download</div></div>
+                        </div>
                     </td>
                     <td><a href='https://youtu.be/watch?v={{item.videoId}}'>Listen on YT</a></td>
                 </tr>
