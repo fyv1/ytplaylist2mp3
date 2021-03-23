@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"https://yt2mp3.pl", "http://yt2mp3.pl", "http://localhost:4200"})
 @RestController
 @RequestMapping("/api/")
 public class YoutubeDownloaderController {
