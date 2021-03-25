@@ -1,0 +1,7 @@
+<div *ngIf="downloading; else loadedBlock"><div class="loader">Loading...</div><p>Your downloading soon will start!</p></div>
+<ng-template #loadedBlock> 
+    <p>Downloading not started?</p> 
+    <div (click)="downloadRequest()"><a routerLink="../downloadsinglemp3">Click here to download again!</a>
+    </div> 
+</ng-template>
+

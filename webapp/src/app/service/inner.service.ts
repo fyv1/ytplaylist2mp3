@@ -16,8 +16,20 @@ export class InnerService {
     return localStorage.getItem("playlistUrl")
   }
 
+  saveVideoUrl(videoUrl: string) {
+    localStorage.setItem("videoUrl", videoUrl)
+  }
+  
+  getVideoUrl() {
+    return localStorage.getItem("videoUrl")
+  }
+
   clearPlaylistUrl() {
     localStorage.removeItem("playlistUrl")
+  }
+
+  clearVideoUrl() {
+    localStorage.removeItem("videoUrl")
   }
 
 }
