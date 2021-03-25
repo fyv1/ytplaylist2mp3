@@ -5,6 +5,21 @@
     margin-right: auto;
 }
 
+nav {
+  padding-bottom: 33px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  padding-right: 50px;
+}
+
 .loader,
 .loader:before,
 .loader:after {

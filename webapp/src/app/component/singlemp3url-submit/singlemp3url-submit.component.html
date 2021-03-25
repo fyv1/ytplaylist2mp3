@@ -1,0 +1,7 @@
+<h5>Download mp3 from yt video!</h5>
+<form (ngSubmit)="onUrlSubmitted()">
+  <div class="form-group">
+    <input type="text" class="form-control" id="ytVideoUrl" required [(ngModel)]="videoUrl" name="ytVideoUrl" placeholder="Paste video url here!">
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>

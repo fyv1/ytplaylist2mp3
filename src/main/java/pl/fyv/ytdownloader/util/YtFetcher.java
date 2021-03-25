@@ -44,12 +44,14 @@ public class YtFetcher {
             logger.info("Playlist " + playlistId + " in processing");
 
             for (PlaylistItem playlistItem : playlistItemsListResponse.getItems()) {
-                logger.info("Currently proccessing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());
+                logger.info("Currently processing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());
                 DownloadItemDTO dto = new DownloadItemDTO();
                 dto.setTitle(playlistItem.getSnippet().getTitle());
                 dto.setVideoId(playlistItem.getSnippet().getResourceId().getVideoId());
-                dto.setThumbnailUrl(playlistItem.getSnippet().getThumbnails().getDefault().getUrl());
-                list.add(dto);
+                if(playlistItem.getSnippet().getThumbnails().getDefault()!=null) { // if default thumbnail is not available, it means something wrong is with video on YT, e.g. it might be deleted
+                    dto.setThumbnailUrl(playlistItem.getSnippet().getThumbnails().getDefault().getUrl());
+                    list.add(dto);
+                }
             }
             nextPageToken = playlistItemsListResponse.getNextPageToken();
         }
