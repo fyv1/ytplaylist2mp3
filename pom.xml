@@ -6,7 +6,7 @@
 
     <groupId>pl.fyv</groupId>
     <artifactId>ytplaylist2mp3</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -84,7 +84,7 @@
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>**/application.properties.example</exclude>
-                    <exclude>**/application.properties</exclude>
+<!--                    <exclude>**/application.properties</exclude>-->
                 </excludes>
             </resource>
         </resources>
