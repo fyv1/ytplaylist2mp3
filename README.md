@@ -5,7 +5,7 @@ Just put your playlist URL and wait until all job is done, then download mp3 fil
 
 No login, no external tools, no ads, everything's free and open sourced!
 
-[Click here to download playlist!](http://yt2mp3.pl "add link here")
+[Click here to download playlist!](http://yt2mp3.pl)
 
 ### Features
 - Download YT Playlist items one by one
