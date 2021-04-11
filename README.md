@@ -9,13 +9,15 @@ No login, no external tools, no ads, everything's free and open sourced!
 
 ### Features
 - Download YT Playlist items one by one
-- SOON! Import your Spotify playlist to YT or vice-versa!
 - Everything goes online, you just wait for your download links
 - Server logging every activity
+- Internal CRON for clearing download path
+- Support for external CRON
+<!--- - SOON! Import your Spotify playlist to YT or vice-versa!) -->
 
 ### Technology
 **Backend**
-- Java JDK 11
+- Java JDK 8
 - Spring Boot 2.4.3
 - Google API Client 1.23.00
 - Google API Services v3-rev222 1.25.0
