@@ -1,3 +1,3 @@
 export class Constants {
-    public static readonly SERVER_URL = "https://localhost:9443"
+    public static readonly SERVER_URL = "http://localhost:9443"
 }
