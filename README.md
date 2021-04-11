@@ -44,4 +44,7 @@ npm install
 ng serve
 ```
 Server will be available at `localhost:8082` and the fronted app at `localhost:4200`.
- 
+
+### Configure HTTPS
+You can run app locally with SSL. You should generate Self-Signed key with `keytool`. In `application.properties` configure `server.ssl.key-store` property and set `server.ssl.enabled` to true.
+Next, you can run Angular app with `ng serve --ssl` - it will create temporary certificate. Remember to set new Backend url in `Constants.ts`.
