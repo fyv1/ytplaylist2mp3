@@ -1,7 +1,8 @@
-<h5>Paste URL to your playlist!</h5>
 <form (ngSubmit)="onUrlSubmitted()">
   <div class="form-group">
-    <input type="text" class="form-control" id="ytPlaylistUrl" required [(ngModel)]="ytPlaylist.playlistUrl" name="ytPlaylistUrl" placeholder="Paste url here!">
+    <input type="text" class="form-control" id="ytPlaylistUrl" required [(ngModel)]="ytPlaylist.playlistUrl" name="ytPlaylistUrl" placeholder="Paste playlist url here!">
+    <small class="form-text text-muted">Paste playlist url you'd like to fetch in format like e.g.: https://www.youtube.com/playlist?list=PLnEiN3g9RA7RtkLDP65QajsXDVmQq3vjh and remember to set its visibility to public!</small>
   </div>
-  <button type="submit" class="btn btn-success">Submit</button>
+  <button type="submit" class="btn btn-outline-secondary">Submit</button>
+
 </form>

@@ -1,12 +1,15 @@
-<h3><a routerLink="">Youtube Playlist Downloading as MP3</a></h3>
 <nav>
     <ul>
-        <li><a routerLink="">Homepage</a></li>
-        <li><a routerLink="/singlemp3">Download single mp3</a></li>
+        <li><a routerLink="" class="text-dark"><h3>Download youtube playlist</h3></a></li>
+        <li><a routerLink="/singlemp3" class="text-dark"><h3>Download single mp3</h3></a></li>
     </ul>
 </nav>
-<router-outlet></router-outlet>
-<div>
-    This is a beta version. Final product may (and will!) be different.
-    Reach <a href="https://github.com/fyv1/ytplaylist2mp3">github repo</a> if you have a feedback.
+
+<div class="container">
+    <router-outlet></router-outlet>
 </div>
+
+<footer>
+    <p>YT2MP3.PL &copy; {{currentYear}}</p>    
+    <p>Reach <a href="https://github.com/fyv1/ytplaylist2mp3">github repo</a> if you have a feedback.</p>
+</footer>
