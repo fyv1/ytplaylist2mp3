@@ -1,4 +1,12 @@
-server.port=8082
 ytdl.developer.key=
 ytdl.application.name=
 ytdl.using.internal.cron=true
+
+server.port=9443
+ytdl.download.path=
+
+server.ssl.enabled=false
+server.ssl.key-store=
+server.ssl.key-store-password=
+server.ssl.keyStoreType=
+server.ssl.keyAlias=
