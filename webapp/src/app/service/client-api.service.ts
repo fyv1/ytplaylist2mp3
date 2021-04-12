@@ -6,6 +6,7 @@ import { tap, catchError } from 'rxjs/operators'
 import { InvalidUrlException } from './../exceptions/InvalidUrlException'
 import { PlaylistNotFoundException } from '../exceptions/PlaylistNotFoundException'
 import { Constants } from '../Constants'
+import { VideoNotFoundException } from '../exceptions/VideoNotFoundException'
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,25 @@ export class ClientApiService {
       throw new InvalidUrlException("Invalid playlist URL")
     }
   } 
+
+  getSingleMp3Item(url: string) : any {
+    let regExp = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+    let match = url.match(regExp)
+    if (match == null) {
+      throw new InvalidUrlException("Invalid video URL")
+    } else if (match) {
+      return this.http.get(`${this.url}/api/mp3/${match[5]}`)
+      .pipe(
+        catchError(() => {
+          alert("Video not found or private")
+          this.router.navigateByUrl('/')
+          return throwError(new VideoNotFoundException("Video not found or private"))
+        })
+      )
+    } else {
+      throw new InvalidUrlException("Invalid video URL")
+    }
+  }
 
   downloadItem(videoId: string) : Observable<HttpResponse<Blob>> {
     return this.http.get<Blob>(`${this.url}/api/video/${videoId}`, {

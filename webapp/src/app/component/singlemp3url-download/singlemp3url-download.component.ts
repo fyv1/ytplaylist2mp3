@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { InvalidUrlException } from 'src/app/exceptions/InvalidUrlException';
 import { HttpResponse } from '@angular/common/http';
 import { VideoNotFoundException } from 'src/app/exceptions/VideoNotFoundException';
+import { PlaylistItem } from 'src/app/domain/PlaylistItem';
 
 @Component({
   selector: 'app-singlemp3url-download',
@@ -15,7 +16,9 @@ export class Singlemp3urlDownloadComponent implements OnInit {
 
   ytVideoUrl: string = this.innerService.getVideoUrl()
   downloading = false
+  loading = false
   filename: string
+  item: PlaylistItem
 
   constructor(
     private innerService: InnerService,
@@ -24,7 +27,7 @@ export class Singlemp3urlDownloadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.downloadRequest()
+    this.getItemInfo()
   }
 
   ngOnDestroy(): void {
@@ -32,7 +35,31 @@ export class Singlemp3urlDownloadComponent implements OnInit {
     this.innerService.clearVideoUrl()
   }
 
-  downloadRequest() {
+  getItemInfo() {
+    try {
+      this.loading = true
+      this.service.getSingleMp3Item(this.ytVideoUrl)
+      .subscribe(item=> {
+        this.item = item
+        this.loading = false
+        this.innerService.clearVideoUrl()
+
+        this.item.currentState = 'readyToDownload'
+        })
+    } catch (error) {
+      if(error instanceof InvalidUrlException)
+        alert("Invalid URL pattern! Paste correct Playlist url from Youtube")
+      if(error instanceof VideoNotFoundException)
+        alert("Playlist not found or private")
+      if(error instanceof TypeError)
+        alert("An error occured! Try again.")
+
+      console.error(error)
+      this.router.navigateByUrl('/')
+    }
+  }
+
+  downloadRequest(item) {
     let regExp = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
     let match = this.ytVideoUrl.match(regExp)
     if (match == null) {
@@ -40,6 +67,7 @@ export class Singlemp3urlDownloadComponent implements OnInit {
     } else if (match) {
       console.log(match)
       try {
+        this.item.currentState = 'downloading'
         this.downloading = true
         this.service.downloadItem(match[5])
           .subscribe((resp: HttpResponse<Blob>)  => {
@@ -57,6 +85,7 @@ export class Singlemp3urlDownloadComponent implements OnInit {
             a.download = filename
             a.click()
             URL.revokeObjectURL(objectUrl)
+            this.item.currentState = 'readyToDownload'
             this.downloading = false
           })
       } catch (error) {

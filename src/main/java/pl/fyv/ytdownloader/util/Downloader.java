@@ -34,6 +34,7 @@ public class Downloader {
         if(tempName.contains("\\")) tempName=tempName.replaceAll("\\\\", "_");
         if(tempName.contains("/")) tempName=tempName.replaceAll("/", "_");
         if(tempName.contains(":")) tempName=tempName.replaceAll(":", "_");
+        if(tempName.contains("\"")) tempName=tempName.replaceAll("\"", "_");
         File output = new File(path+tempName);
         logger.info("File saved in: "+output.getAbsolutePath());
         FileOutputStream stream = new FileOutputStream(output);
@@ -94,7 +95,7 @@ public class Downloader {
     }
 
     private String loadConverter(String id) throws IOException {
-        String url = "https://www.320youtube.com/v14/watch?v=" + id; //downloading api
+        String url = "https://www.320youtube.com/v27/watch?v=" + id; //downloading api
         byte[] bytes = load(url, null);
         return new String(bytes);
     }

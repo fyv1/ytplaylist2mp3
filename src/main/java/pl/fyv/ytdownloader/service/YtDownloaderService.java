@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.fyv.ytdownloader.domain.DownloadItemDTO;
+import pl.fyv.ytdownloader.domain.exception.VideoProcessingException;
 import pl.fyv.ytdownloader.util.Downloader;
 import pl.fyv.ytdownloader.util.YtFetcher;
 
@@ -52,7 +53,21 @@ public class YtDownloaderService {
         if(!list.isEmpty())
             return list;
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Playlist not found or private");
+    }
 
+    public DownloadItemDTO getSingleVideoInfo(String vidId) {
+        DownloadItemDTO dto = null;
+        try {
+            dto = fetcher.getSingleMp3Info(vidId);
+        } catch (VideoProcessingException e) {
+            logger.warn(vidId+" processing error (video private or not found)");
+        } catch (GeneralSecurityException | IOException e) {
+            logger.warn(e.getMessage());
+            e.printStackTrace();
+        }
+        if(dto!=null)
+            return dto;
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found or private");
     }
 
     public File downloadMp(String ytUrl) {
