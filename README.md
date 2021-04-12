@@ -13,6 +13,7 @@ No login, no external tools, no ads, everything's free and open sourced!
 - Server logging every activity
 - Internal CRON for clearing download path
 - Support for external CRON
+- Caching playlist results
 <!--- - SOON! Import your Spotify playlist to YT or vice-versa!) -->
 
 ### Technology
