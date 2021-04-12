@@ -27,6 +27,8 @@ public class YtFetcher {
     @Value("${ytdl.application.name}")
     private String APPLICATION_NAME;
 
+    private long ytPaginationMaxResult = 50L;
+
     public ArrayList<DownloadItemDTO> getPlaylist(String playlistId) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         ArrayList<DownloadItemDTO> list = new ArrayList<>();
         YouTube youtubeService = getService();
@@ -34,14 +36,14 @@ public class YtFetcher {
         String nextPageToken = "";
         while (nextPageToken != null) {
             YouTube.PlaylistItems.List playlistItemsListRequest = youtubeService.playlistItems().list("snippet");
-            playlistItemsListRequest.setMaxResults(50L);
+            playlistItemsListRequest.setMaxResults(ytPaginationMaxResult);
             playlistItemsListRequest.setPageToken(nextPageToken);
 
             PlaylistItemListResponse playlistItemsListResponse = playlistItemsListRequest
                     .setKey(DEVELOPER_KEY)
                     .setPlaylistId(playlistId)
                     .execute();
-            logger.info("Playlist " + playlistId + " in processing");
+            logger.info("Playlist " + playlistId + " in processing (yt pagination: "+ nextPageToken+", max pagination items: "+ ytPaginationMaxResult+")");
 
             for (PlaylistItem playlistItem : playlistItemsListResponse.getItems()) {
                 logger.info("Currently processing: " + playlistItem.getSnippet().getTitle() + ", id: " + playlistItem.getSnippet().getResourceId().getVideoId());
