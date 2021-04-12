@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +23,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 @Service
+@CacheConfig(cacheNames = "downloadItems")
 public class YtDownloaderService {
 
     @Autowired
@@ -27,11 +32,15 @@ public class YtDownloaderService {
     Downloader downloader;
     @Value("${ytdl.download.path}")
     private String path;
+    @Autowired
+    CacheManager cacheManager;
+
+    private ArrayList<DownloadItemDTO> list = new ArrayList<>();
 
     final static Logger logger = LoggerFactory.getLogger(Downloader.class);
 
+    @Cacheable
     public ArrayList<DownloadItemDTO> getPlaylistItems(String playlistId) {
-        ArrayList<DownloadItemDTO> list = new ArrayList<>();
         try {
             list = fetcher.getPlaylist(playlistId);
         } catch (GoogleJsonResponseException e) {
@@ -64,11 +73,16 @@ public class YtDownloaderService {
             logger.info("Failed to delete the file.");
     }
 
+    @CacheEvict(allEntries = true)
     public void clearDir() {
         File dir = new File(path);
         for(File file: dir.listFiles())
             if (!file.isDirectory())
                 file.delete();
         logger.info("Dir path cleared!");
+
+        if(!cacheManager.getCacheNames().isEmpty())
+            cacheManager.getCache("downloadItems").clear();
+        logger.info("Cache cleared!");
     }
 }
