@@ -32,6 +32,11 @@ public class YoutubeDownloaderController {
         return new ResponseEntity<>(service.getPlaylistItems(id), HttpStatus.OK);
     }
 
+    @GetMapping("/mp3/{id}")
+    public ResponseEntity<DownloadItemDTO> getYtVideoInfo(@PathVariable("id") String id) {
+        return new ResponseEntity<>(service.getSingleVideoInfo(id), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/video/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable("id") String id) throws FileNotFoundException {
         File file = service.downloadMp(id);

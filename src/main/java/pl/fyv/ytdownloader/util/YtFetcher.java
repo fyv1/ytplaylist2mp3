@@ -8,11 +8,14 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pl.fyv.ytdownloader.domain.DownloadItemDTO;
+import pl.fyv.ytdownloader.domain.exception.VideoProcessingException;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -59,6 +62,26 @@ public class YtFetcher {
         }
 
         return list;
+    }
+
+    public DownloadItemDTO getSingleMp3Info(String vidId) throws GeneralSecurityException, IOException {
+        YouTube youtubeService = getService();
+
+        YouTube.Videos.List videosListRequest = youtubeService.videos().list("snippet");
+        VideoListResponse response = videosListRequest
+                .setKey(DEVELOPER_KEY)
+                .setId(vidId)
+                .execute();
+        logger.info("Video: "+ vidId + " in processing");
+        DownloadItemDTO dto = new DownloadItemDTO();
+        Video tempItem = response.getItems().get(0);
+        dto.setTitle(tempItem.getSnippet().getTitle());
+        dto.setVideoId(tempItem.getId());
+        if(tempItem.getSnippet().getThumbnails().getDefault()!=null)  { // if default thumbnail is not available, it means something wrong is with video on YT, e.g. it might be deleted
+            dto.setThumbnailUrl(tempItem.getSnippet().getThumbnails().getDefault().getUrl());
+            return dto;
+        }
+        throw new VideoProcessingException();
     }
 
     private YouTube getService() throws GeneralSecurityException, IOException {

@@ -6,7 +6,7 @@
 
     <groupId>pl.fyv</groupId>
     <artifactId>ytplaylist2mp3</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
