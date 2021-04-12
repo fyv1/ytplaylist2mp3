@@ -1,9 +1,9 @@
 ytdl.developer.key=
 ytdl.application.name=
 ytdl.using.internal.cron=true
+ytdl.download.path=
 
 server.port=9443
-ytdl.download.path=
 
 server.ssl.enabled=false
 server.ssl.key-store=
